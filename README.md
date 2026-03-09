@@ -67,7 +67,7 @@ long long modInverse(long long a, long long m)
 
 int main()
 {
-    long long p, g, bob_private_key, message, k;
+    long long p, g, prathyus_private_key, message, k;
 
     printf("Enter a prime number (p): ");
     scanf("%lld", &p);
@@ -76,10 +76,10 @@ int main()
     scanf("%lld", &g);
 
     printf("Prathyus's private key (x): ");
-    scanf("%lld", &bob_private_key);
+    scanf("%lld", &prathyus_private_key);
 
-    long long bob_public_key = modexp(g, bob_private_key, p);
-    printf("Prathyus's public key (y): %lld\n", bob_public_key);
+    long long prathyus_public_key = modexp(g, prathyus_private_key, p);
+    printf("Prathyus's public key (y): %lld\n", prathyus_public_key);
 
     printf("Preethi, enter the message (M) you want to send: ");
     scanf("%lld", &message);
@@ -88,12 +88,12 @@ int main()
     scanf("%lld", &k);
 
     long long c1 = modexp(g, k, p);
-    long long yk = modexp(bob_public_key, k, p);
+    long long yk = modexp(prathyus_public_key, k, p);
     long long c2 = (message * yk) % p;
 
     printf("Preethi sends encrypted message (c1, c2): (%lld, %lld)\n", c1, c2);
 
-    long long s = modexp(c1, bob_private_key, p);
+    long long s = modexp(c1, prathyus_private_key, p);
     long long s_inv = modInverse(s, p);
 
     long long decrypted_message = (c2 * s_inv) % p;
