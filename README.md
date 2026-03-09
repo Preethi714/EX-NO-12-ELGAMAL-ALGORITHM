@@ -24,10 +24,89 @@ To Implement ELGAMAL ALGORITHM
 6. Security: The security of the ElGamal algorithm relies on the difficulty of solving the discrete logarithm problem in a large prime field, making it secure for encryption.
 
 ## Program:
+```
+#include <stdio.h>
 
+long long modexp(long long base, long long exp, long long mod)
+{
+    long long result = 1;
+    base %= mod;
+
+    while (exp > 0)
+    {
+        if (exp % 2 == 1)
+            result = (result * base) % mod;
+
+        base = (base * base) % mod;
+        exp /= 2;
+    }
+    return result;
+}
+
+long long modInverse(long long a, long long m)
+{
+    long long m0 = m, t, q;
+    long long x0 = 0, x1 = 1;
+
+    while (a > 1)
+    {
+        q = a / m;
+        t = m;
+        m = a % m;
+        a = t;
+        t = x0;
+        x0 = x1 - q * x0;
+        x1 = t;
+    }
+
+    if (x1 < 0)
+        x1 += m0;
+
+    return x1;
+}
+
+int main()
+{
+    long long p, g, bob_private_key, message, k;
+
+    printf("Enter a prime number (p): ");
+    scanf("%lld", &p);
+
+    printf("Enter a primitive root modulo p (g): ");
+    scanf("%lld", &g);
+
+    printf("Prathyus's private key (x): ");
+    scanf("%lld", &bob_private_key);
+
+    long long bob_public_key = modexp(g, bob_private_key, p);
+    printf("Prathyus's public key (y): %lld\n", bob_public_key);
+
+    printf("Preethi, enter the message (M) you want to send: ");
+    scanf("%lld", &message);
+
+    printf("Preethi's private key (k): ");
+    scanf("%lld", &k);
+
+    long long c1 = modexp(g, k, p);
+    long long yk = modexp(bob_public_key, k, p);
+    long long c2 = (message * yk) % p;
+
+    printf("Preethi sends encrypted message (c1, c2): (%lld, %lld)\n", c1, c2);
+
+    long long s = modexp(c1, bob_private_key, p);
+    long long s_inv = modInverse(s, p);
+
+    long long decrypted_message = (c2 * s_inv) % p;
+
+    printf("Prathyus decrypts the message: %lld\n", decrypted_message);
+
+    return 0;
+}
+```
 
 ## Output:
 
+<img width="1677" height="924" alt="image" src="https://github.com/user-attachments/assets/18812cf4-d8c5-46eb-b340-9467a4d72748" />
 
 ## Result:
 The program is executed successfully.
